@@ -9,8 +9,7 @@ from pyrogram import Client
 # Отправка фотографии каждый день в 8 часов
 async def birthday(app):
     chat_id = config.CHAT_ID
-    img = await utils.make_image()
-    img.save('temp.png')
+    await utils.make_image()
     photo_path = config.BG_PATH
 
     # Получение информации о текущем пользователе (боте)
