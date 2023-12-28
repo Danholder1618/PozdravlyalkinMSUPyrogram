@@ -15,12 +15,10 @@ async def delete_message(chat_id, message_id, delay_seconds, app):
     await app.delete_messages(chat_id, message_id)
 
 async def make_image():
-    response = requests.get(config.PIC_PLACE)
-    im = Image.open(BytesIO(response.content))
+    im = Image.open(config.PIC_PLACE)  
 
     # Вотермарка
-    response = requests.get(config.LOGO_PLACE)
-    watermark = Image.open(BytesIO(response.content)).convert("RGBA")
+    watermark = Image.open(config.LOGO_PLACE).convert("RGBA")
     mask = Image.new("L", watermark.size, 128)
     im.paste(watermark, (25, 25), mask)
 
@@ -39,16 +37,11 @@ async def make_image():
 
     q = len(bd_tuday)
     for i in range(q):
-        if (bd_tuday[i][3] == 1):
+        if bd_tuday[i][3] == 1:
             y = y + 50
-            draw_text.text((x, y), f'{(bd_tuday[i][0])[:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill='#ffffff')
+            draw_text.text((x, y), f'{bd_tuday[i][0][:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill='#ffffff')
 
     draw_text.text((100, y+100), 'Вот так вот', font=font1, fill='#ffd700')
 
-    #im.show()
-
     image_stream = BytesIO()
-    # Сохраняем изображение в байтовый поток в формате PNG
-    im.save(image_stream, format="PNG")
-    image_stream.seek(0)
-    return(im)
+    im.save('temp.png', format="PNG")
