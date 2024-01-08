@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  my_bot:
+    build: .
+    volumes:
+      - .:/usr/src/app
