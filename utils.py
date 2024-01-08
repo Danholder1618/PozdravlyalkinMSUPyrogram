@@ -4,6 +4,7 @@ import db_functions
 import random
 import asyncio
 import text
+import textwrap
 
 from io import BytesIO
 from datetime import datetime
@@ -11,6 +12,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 async def random_congratulation():
     return random.choice(text.pozdr_list).strip()
+
+async def random_pic():
+    return random.choice(config.PIC_PLACE).strip()
 
 # Функция для удаления сообщения по его идентификатору после определенного времени
 async def delete_message(chat_id, message_id, delay_seconds, app):
@@ -23,7 +27,7 @@ def get_contrast_color(background_color):
     return "#E8CB52" if brightness < 128 else "#A60B38"
 
 async def make_image():
-    im = Image.open(config.PIC_PLACE) 
+    im = Image.open(await random_pic()) 
     pozdr_niz = await random_congratulation()
 
     # Вотермарка
@@ -32,9 +36,9 @@ async def make_image():
     im.paste(watermark, (25, 25), mask)
 
     # Текст
-    font1 = ImageFont.truetype("arial.ttf", size=70)
-    font2 = ImageFont.truetype("arial.ttf", size=40)
-    font3 = ImageFont.truetype("arial.ttf", size=40)
+    font1 = ImageFont.truetype("georgia.ttf", size=70)
+    font2 = ImageFont.truetype("cour.ttf", size=45)
+    font3 = ImageFont.truetype("georgia.ttf", size=50)
     draw_text = ImageDraw.Draw(im)
     
     # Цвет текста на основе контраста
@@ -42,45 +46,145 @@ async def make_image():
     text_color = get_contrast_color(background_color)
 
     # Добавление черного обрамления для лучшей видимости текста
-    draw_text.text((300-1, 100-1), f'{text.pordr_verh}', font=font1, fill="#000000")  
-    draw_text.text((300+1, 100-1), f'{text.pordr_verh}', font=font1, fill="#000000")
-    draw_text.text((300-1, 100+1), f'{text.pordr_verh}', font=font1, fill="#000000")
-    draw_text.text((300+1, 100+1), f'{text.pordr_verh}', font=font1, fill="#000000")
-    draw_text.text((300, 100), f'{text.pordr_verh}', font=font1, fill=text_color)
+    draw_text.text((320-1, 100-1), f'{text.pordr_verh}', font=font1, fill="#000000")  
+    draw_text.text((320+1, 100-1), f'{text.pordr_verh}', font=font1, fill="#000000")
+    draw_text.text((320-1, 100+1), f'{text.pordr_verh}', font=font1, fill="#000000")
+    draw_text.text((320+1, 100+1), f'{text.pordr_verh}', font=font1, fill="#000000")
+    draw_text.text((320, 100), f'{text.pordr_verh}', font=font1, fill=text_color)
 
     current_date = datetime.now().strftime("%d.%m")
     current_date = "'" + current_date + "'"
 
     bd_tuday = db_functions.name_and_group_get(current_date)
-    x = 300
-    y = 200
+    x = 280
+    y = 160
 
     q = len(bd_tuday)
     for i in range(q):
+        y = y + 50
         if bd_tuday[i][3] == 1:
-            y = y + 50
-        # Определение максимальной высоты для текста (высота изображения минус отступ)
-        max_text_height = im.size[1] - 50
 
-        q = len(bd_tuday)
-        for i in range(q):
-            if bd_tuday[i][3] == 1:
-                y = y + 50
-                # Проверка на выход за пределы изображения
-                if y + 50 > max_text_height:
-                    y = 200  # Возвращение на начальную позицию
-                # Аналогично для второго шрифта
-                draw_text.text((x-1, y-1), f'{bd_tuday[i][0][:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill="#000000")
-                draw_text.text((x+1, y-1), f'{bd_tuday[i][0][:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill="#000000")
-                draw_text.text((x-1, y+1), f'{bd_tuday[i][0][:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill="#000000")
-                draw_text.text((x+1, y+1), f'{bd_tuday[i][0][:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill="#000000")
-                draw_text.text((x, y), f'{bd_tuday[i][0][:-1]}, группа: {bd_tuday[i][2]} !', font=font2, fill=text_color)
+            max_line_length = 35
 
+            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x-1, new_y-1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x+1, new_y-1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x-1, new_y+1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x+1, new_y+1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x, new_y), line, font=font2, fill=text_color)
+                new_y += 50
+                new_x = x-20
 
-    draw_text.text((100-1, y+100-1), f'{pozdr_niz}', font=font3, fill="#000000")  
-    draw_text.text((100+1, y+100-1), f'{pozdr_niz}', font=font3, fill="#000000")
-    draw_text.text((100-1, y+100+1), f'{pozdr_niz}', font=font3, fill="#000000")
-    draw_text.text((100+1, y+100+1), f'{pozdr_niz}', font=font3, fill="#000000")
-    draw_text.text((100, y+100), f'{pozdr_niz}', font=font3, fill=text_color)
+        else:
+            max_line_length = 35
+
+            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x-1, new_y-1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x+1, new_y-1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x-1, new_y+1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x+1, new_y+1), line, font=font2, fill="#000000")
+                new_y += 50
+                new_x = x-20
+            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+            new_y = y
+            new_x = x
+            for line in wrapped_text:
+                draw_text.text((new_x, new_y), line, font=font2, fill=text_color)
+                new_y += 50
+                new_x = x-20
+
+    y += 20
+    max_line_length = 35
+    text_to_wrap = f'{pozdr_niz}'
+    wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
+
+    new_y = y + 50
+    new_x = 100
+    for line in wrapped_text:
+        draw_text.text((new_x-1, new_y-1), line, font=font3, fill="#000000")
+        new_y += 50
+        new_x = 100-30
+    new_y = y + 50
+    new_x = 100
+    for line in wrapped_text: 
+        draw_text.text((new_x+1, new_y-1), line, font=font3, fill="#000000")
+        new_y += 50
+        new_x = 100-30
+    new_y = y + 50
+    new_x = 100
+    for line in wrapped_text:
+        draw_text.text((new_x-1, new_y+1), line, font=font3, fill="#000000")
+        new_y += 50
+        new_x = 100-30
+    new_y = y + 50
+    new_x = 100
+    for line in wrapped_text:
+        draw_text.text((new_x+1, new_y+1), line, font=font3, fill="#000000")
+        new_y += 50
+        new_x = 100-30
+    new_y = y + 50
+    new_x = 100
+    for line in wrapped_text:
+        draw_text.text((new_x, new_y), line, font=font3, fill=text_color)
+        new_y += 50
+        new_x = 100-30
 
     im.save('temp.png', format="PNG")

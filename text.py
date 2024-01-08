@@ -1,6 +1,6 @@
 greet = "Привет! Я бот, который поздравляет с днем рождения МГУшников, все вопросы @danya_beliy."
 prompt = "Create an abstract image with burgundy background and confetti to convey a sense of celebration"
-pordr_verh = "В верху текст!"
+pordr_verh = "Поздравляем!"
 pozdr_list = [
     "С днем рождения, будущие магистры! МГУ гордится такими яркими умами, как вы.",
     "Сегодня не только ваш день рождения, но и день, когда мир получил еще одного гения из МГУ. Поздравляю!",
