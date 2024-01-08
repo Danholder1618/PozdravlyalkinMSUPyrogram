@@ -10,10 +10,11 @@ from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 
 async def random_congratulation():
-    return random.choice(text.pozdr_list).strip()
+    return random.choice(text.pozdr_list).rstrip()
 
 async def random_pic():
-    return random.choice(config.PIC_PLACE).strip()
+    return random.choice(config.PIC_PLACE).rstrip()
+
 
 # Функция для удаления сообщения по его идентификатору после определенного времени
 async def delete_message(chat_id, message_id, delay_seconds, app):
@@ -36,12 +37,12 @@ async def make_image():
 
     # Текст
     font1 = ImageFont.truetype("georgia.ttf", size=70)
-    font2 = ImageFont.truetype("cour.ttf", size=45)
+    font2 = ImageFont.truetype("cour.ttf", size=48)
     font3 = ImageFont.truetype("georgia.ttf", size=50)
     draw_text = ImageDraw.Draw(im)
     
     # Цвет текста на основе контраста
-    background_color = im.getpixel((100, 250))  # Пример координат для определения цвета фона
+    background_color = im.getpixel((100, 250))
     text_color = get_contrast_color(background_color)
 
     # Добавление черного обрамления для лучшей видимости текста
@@ -61,11 +62,13 @@ async def make_image():
     q = len(bd_tuday)
     for i in range(q):
         y = y + 50
+        max_line_length = 30
         if bd_tuday[i][3] == 1:
 
-            max_line_length = 35
+            name_parts = bd_tuday[i][0].strip().split()[:2]
+            fi = ' '.join(name_parts)
 
-            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            text_to_wrap = f'{fi.strip()}, {bd_tuday[i][2].strip()}'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -73,7 +76,7 @@ async def make_image():
                 draw_text.text((new_x-1, new_y-1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            text_to_wrap = f'{fi.strip()}, {bd_tuday[i][2].strip()}'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -81,7 +84,7 @@ async def make_image():
                 draw_text.text((new_x+1, new_y-1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            text_to_wrap = f'{fi.strip()}, {bd_tuday[i][2].strip()}'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -89,7 +92,7 @@ async def make_image():
                 draw_text.text((new_x-1, new_y+1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            text_to_wrap = f'{fi.strip()}, {bd_tuday[i][2].strip()}'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -97,7 +100,7 @@ async def make_image():
                 draw_text.text((new_x+1, new_y+1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'{bd_tuday[i][0]}, группа: {bd_tuday[i][2]} !'
+            text_to_wrap = f'{fi.strip()}, {bd_tuday[i][2].strip()}'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -105,11 +108,14 @@ async def make_image():
                 draw_text.text((new_x, new_y), line, font=font2, fill=text_color)
                 new_y += 50
                 new_x = x-20
+            y += 30
 
         else:
-            max_line_length = 35
 
-            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            name_parts = bd_tuday[i][0].strip().split()[:2]
+            fi = ' '.join(name_parts)
+
+            text_to_wrap = f'! {fi.strip()} !'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -117,7 +123,7 @@ async def make_image():
                 draw_text.text((new_x-1, new_y-1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            text_to_wrap = f'! {fi.strip()} !'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -125,7 +131,7 @@ async def make_image():
                 draw_text.text((new_x+1, new_y-1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            text_to_wrap = f'! {fi.strip()} !'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -133,7 +139,7 @@ async def make_image():
                 draw_text.text((new_x-1, new_y+1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            text_to_wrap = f'! {fi.strip()} !'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x
@@ -141,7 +147,7 @@ async def make_image():
                 draw_text.text((new_x+1, new_y+1), line, font=font2, fill="#000000")
                 new_y += 50
                 new_x = x-20
-            text_to_wrap = f'! {bd_tuday[i][0]} !'
+            text_to_wrap = f'! {fi.strip()} !'
             wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
             new_y = y
             new_x = x

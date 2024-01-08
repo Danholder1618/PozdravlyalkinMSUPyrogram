@@ -2,6 +2,7 @@ import pyrogram
 import asyncio
 import config
 import sched
+import db_functions
 import time as stime
 
 from pyrogram import Client
@@ -19,7 +20,11 @@ async def main():
         await app.start()
         now = datetime.now()
         if now.time() >= time(8, 0):
-            await birthday(app)
+            current_date = datetime.now().strftime("%d.%m")
+            current_date = "'" + current_date + "'"
+            bd_tuday = db_functions.name_and_group_get(current_date)
+            if len(bd_tuday) != 0:
+                await birthday(app)
 
         # Планировщик для следующего выполнения
         next_run = now.replace(hour=8, minute=0, second=0, microsecond=0)  # Установка времени следующего выполнения
