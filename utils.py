@@ -1,4 +1,3 @@
-import os
 import config
 import db_functions
 import random

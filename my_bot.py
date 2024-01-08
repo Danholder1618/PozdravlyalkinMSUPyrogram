@@ -1,8 +1,6 @@
-import asyncio
-import datetime
 import config
 import utils
-import sqlite3
+import text
 
 from pyrogram import Client
 
@@ -21,5 +19,5 @@ async def birthday(app):
     else:
         file_size_limit_mib = 2000
 
-    msg = await app.send_photo(chat_id, photo_path, "Тута тоже текст можно")
+    msg = await app.send_photo(chat_id, photo_path, text.podpis)
     await utils.delete_message(chat_id, msg, 86360, app)
