@@ -37,7 +37,7 @@ async def make_image():
     else: text_color = "#A60B38"
 
     # Вотермарка
-    watermark = Image.open(get_contrast_logo(background_color)).convert("RGBA")
+    watermark = Image.open(get_contrast_logo(color_index)).convert("RGBA")
     watermark = watermark.resize((250, 250))
     im.paste(watermark, (25, 25), watermark)
 
