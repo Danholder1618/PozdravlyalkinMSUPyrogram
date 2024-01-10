@@ -15,23 +15,28 @@ async def random_congratulation():
 async def random_pic():
     return random.choice(config.PIC_PLACE).rstrip()
 
-
-# Функция для удаления сообщения по его идентификатору после определенного времени
 async def delete_message(chat_id, message_id, delay_seconds, app):
     await asyncio.sleep(delay_seconds)
     await app.delete_messages(chat_id, message_id)
 
 def get_contrast_color(background_color):
-    # Простой алгоритм для определения контрастного цвета (темно-желтый или темно-синий)
     brightness = sum(background_color) / 3
     return "#E8CB52" if brightness < 128 else "#A60B38"
+
+def get_contrast_logo(background_color):
+    brightness = sum(background_color) / 3
+    return config.LOGO_WHITE if brightness < 128 else config.LOGO_BLACK
 
 async def make_image():
     im = Image.open(await random_pic()) 
     pozdr_niz = await random_congratulation()
 
+    # Цвет текста на основе контраста
+    background_color = im.getpixel((100, 250))
+    text_color = get_contrast_color(background_color)
+
     # Вотермарка
-    watermark = Image.open(config.LOGO_PLACE).convert("RGBA")
+    watermark = Image.open(get_contrast_logo(background_color)).convert("RGBA")
     mask = Image.new("L", watermark.size, 128)
     im.paste(watermark, (25, 25), mask)
 
@@ -40,10 +45,6 @@ async def make_image():
     font2 = ImageFont.truetype("cour.ttf", size=48)
     font3 = ImageFont.truetype("georgia.ttf", size=50)
     draw_text = ImageDraw.Draw(im)
-    
-    # Цвет текста на основе контраста
-    background_color = im.getpixel((100, 250))
-    text_color = get_contrast_color(background_color)
 
     # Добавление черного обрамления для лучшей видимости текста
     draw_text.text((320-1, 100-1), f'{text.pordr_verh}', font=font1, fill="#000000")  
