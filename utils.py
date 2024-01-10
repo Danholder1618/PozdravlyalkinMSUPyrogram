@@ -21,11 +21,10 @@ async def delete_message(chat_id, message_id, delay_seconds, app):
 
 def get_contrast_color(background_color):
     brightness = sum(background_color) / 3
-    return "#E8CB52" if brightness < 128 else "#A60B38"
+    return 1 if brightness < 128 else 2
 
-def get_contrast_logo(background_color):
-    brightness = sum(background_color) / 3
-    return config.LOGO_WHITE if brightness < 128 else config.LOGO_BLACK
+def get_contrast_logo(color_index):
+    return config.LOGO_WHITE if color_index == 1 else config.LOGO_BLACK
 
 async def make_image():
     im = Image.open(await random_pic()) 
@@ -33,12 +32,14 @@ async def make_image():
 
     # Цвет текста на основе контраста
     background_color = im.getpixel((100, 250))
-    text_color = get_contrast_color(background_color)
+    color_index = get_contrast_color(background_color)
+    if (color_index == 1): text_color = "#E8CB52"
+    else: text_color = "#A60B38"
 
     # Вотермарка
     watermark = Image.open(get_contrast_logo(background_color)).convert("RGBA")
-    mask = Image.new("L", watermark.size, 128)
-    im.paste(watermark, (25, 25), mask)
+    watermark = watermark.resize((250, 250))
+    im.paste(watermark, (25, 25), watermark)
 
     # Текст
     font1 = ImageFont.truetype("georgia.ttf", size=70)
