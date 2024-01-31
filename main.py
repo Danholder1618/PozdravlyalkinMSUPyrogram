@@ -18,7 +18,7 @@ async def main():
     async def scheduled():
         while not shutdown_event.is_set():
             now = datetime.now()
-            if now.time() >= time(8, 0):
+            if now.time() >= time(7, 0):
                 current_date = datetime.now().strftime("%d.%m")
                 current_date = "'" + current_date + "'"
                 bd_tuday = db_functions.name_and_group_get(current_date)
