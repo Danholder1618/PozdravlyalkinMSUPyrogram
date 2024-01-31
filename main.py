@@ -9,7 +9,7 @@ from my_bot import birthday
 from datetime import datetime, time, timedelta
 
 async def main():
-    app = Client("Поздравлялкин Тестовый", api_id=config.APP_API_ID, api_hash=config.APP_API_HASH, bot_token=config.T_T)
+    app = Client("Поздравлялкин Тестовый", api_id=config.APP_API_ID, api_hash=config.APP_API_HASH, bot_token=config.BOT_TOKEN)
     await app.start()
 
     # Создаем событие для синхронизации
