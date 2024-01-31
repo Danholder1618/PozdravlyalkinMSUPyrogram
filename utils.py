@@ -9,6 +9,7 @@ import os
 from io import BytesIO
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
+
 async def save_message_id(message_id):
     file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'message_ids.txt')
 
