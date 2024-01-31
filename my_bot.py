@@ -2,7 +2,7 @@ import config
 import utils
 import text
 
-from pyrogram import Client
+from datetime import datetime, time, timedelta
 
 # Отправка фотографии каждый день в 8 часов
 async def birthday(app):
@@ -19,5 +19,13 @@ async def birthday(app):
     else:
         file_size_limit_mib = 2000
 
-    msg = await app.send_photo(chat_id, photo_path, text.podpis)
-    await utils.delete_message(chat_id, msg, 86360, app)
+    message = await app.send_photo(chat_id, photo_path, text.podpis)
+    message_id = message.id
+
+    # Рассчитываем время следующего выполнения (8 утра следующего дня)
+    now = datetime.now()
+    next_run = datetime.combine(now.date() + timedelta(days=1), time(7, 59))
+    delay = (next_run - now).total_seconds()
+
+    await utils.save_message_id(str(message_id))
+    await utils.delete_message(chat_id, message_id, delay, app)

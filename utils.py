@@ -4,10 +4,16 @@ import random
 import asyncio
 import text
 import textwrap
+import os
 
 from io import BytesIO
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
+async def save_message_id(message_id):
+    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'message_ids.txt')
+
+    with open(file_path, 'a') as file:
+        file.write(f"{message_id}\n")
 
 async def random_congratulation():
     return random.choice(text.pozdr_list).rstrip()
