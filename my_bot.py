@@ -18,8 +18,7 @@ async def birthday(app):
     else:
         file_size_limit_mib = 2000
 
-    # await app.send_photo(config.MY_ID, photo_path, text.podpis)
-    message = await app.send_photo(config.MY_ID, photo_path, text.podpis)
+    message = await app.send_photo(config.MSU_ID, photo_path, text.podpis)
     message_id = message.id
 
     await utils.save_congratulation_status(1)

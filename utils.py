@@ -31,8 +31,17 @@ async def save_message_id(message_id):
     with open(file_path, 'a') as file:
         file.write(f"{message_id}\n")
 
-async def random_congratulation():
-    return random.choice(text.pozdr_list).rstrip()
+async def random_congratulation(case):
+    if case == 1:
+        return random.choice(text.pozdr_list_one_student).rstrip()
+    if case == 2:
+        return random.choice(text.pozdr_list_multiple_student).rstrip()
+    if case == 3:
+        return random.choice(text.pozdr_list_one_teacher).rstrip()
+    if case == 4:
+        return random.choice(text.pozdr_list_multiple_teacher).rstrip()
+    if case == 5:
+        return random.choice(text.pozdr_list_both).rstrip()
 
 async def random_pic():
     return random.choice(config.PIC_PLACE).rstrip()
@@ -63,8 +72,7 @@ def get_contrast_logo(color_index):
     return config.LOGO_WHITE if color_index == 1 else config.LOGO_BLACK
 
 async def make_image():
-    im = Image.open(await random_pic()) 
-    pozdr_niz = await random_congratulation()
+    im = Image.open(await random_pic())
 
     # Цвет текста на основе контраста
     background_color = im.getpixel((100, 250))
@@ -98,6 +106,25 @@ async def make_image():
     y = 160
 
     q = len(bd_tuday)
+    if q == 1:
+        if bd_tuday[0][3] == 1:
+            case = 1
+        else:
+            case = 3
+    else:
+        ch = 0
+        for i in range(q):
+            if bd_tuday[i][3] == 1:
+                ch += 1
+        if ch == q:
+            case = 2
+        if ch == 0:
+            case = 4
+        else:
+            case = 5
+
+    pozdr_niz = await random_congratulation(case)
+
     for i in range(q):
         y = y + 50
         max_line_length = 30
