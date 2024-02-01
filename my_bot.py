@@ -6,7 +6,6 @@ from datetime import datetime, time, timedelta
 
 # Отправка фотографии каждый день в 8 часов
 async def birthday(app):
-    chat_id = config.CHAT_ID
     await utils.make_image()
     photo_path = config.BG_PATH
 
@@ -19,13 +18,23 @@ async def birthday(app):
     else:
         file_size_limit_mib = 2000
 
-    message = await app.send_photo(chat_id, photo_path, text.podpis)
+    # await app.send_photo(config.MY_ID, photo_path, text.podpis)
+    message = await app.send_photo(config.MY_ID, photo_path, text.podpis)
     message_id = message.id
 
-    # Рассчитываем время следующего выполнения (8 утра следующего дня)
+    await utils.save_congratulation_status(1)
+    last_congratulation_sent = await utils.get_congratulation_status()
+    await app.send_message(config.MY_ID, f"Статус {'Отправлено' if last_congratulation_sent == 1 else 'Не Отправлено'}")
+
+    # Рассчитываем время следующего выполнения (3:59 утра следующего дня)
     now = datetime.now()
-    next_run = datetime.combine(now.date() + timedelta(days=1), time(7, 59))
+    next_run = datetime.combine(now.date() + timedelta(days=1), time(3, 59))
     delay = (next_run - now).total_seconds()
 
-    await utils.save_message_id(str(message_id))
-    await utils.delete_message(chat_id, message_id, delay, app)
+    hours, remainder = divmod(delay, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    await app.send_message(config.MY_ID,
+                           f"!Поздравление отправлено, уделение будет через: {int(hours)} часов, {int(minutes)} минут, {int(seconds)} секунд.")
+    await utils.save_message_id(message_id)
+    await utils.delete_message(config.MY_ID, delay, app)
