@@ -25,9 +25,9 @@ async def birthday(app):
     last_congratulation_sent = await utils.get_congratulation_status()
     await app.send_message(config.MY_ID, f"Статус {'Отправлено' if last_congratulation_sent == 1 else 'Не Отправлено'}")
 
-    # Рассчитываем время следующего выполнения (3:59 утра следующего дня)
+    # Рассчитываем время следующего выполнения (7:59 утра следующего дня)
     now = datetime.now()
-    next_run = datetime.combine(now.date() + timedelta(days=1), time(3, 59))
+    next_run = datetime.combine(now.date() + timedelta(days=1), time(7, 59))
     delay = (next_run - now).total_seconds()
 
     hours, remainder = divmod(delay, 3600)
