@@ -23,7 +23,7 @@ async def main():
             # Получение статуса отправки последнего поздравления
             last_congratulation_sent = await utils.get_congratulation_status()
 
-            if now.time() >= time(4, 0):
+            if now.time() >= time(8, 0):
                 current_date = datetime.now().strftime("%d.%m")
                 current_date = "'" + current_date + "'"
                 bd_tuday = db_functions.name_and_group_get(current_date)
@@ -35,7 +35,7 @@ async def main():
                     await birthday(app)
                 else:
                     now = datetime.now()
-                    next_run = datetime.combine(now.date() + timedelta(days=1), time(3, 59))
+                    next_run = datetime.combine(now.date() + timedelta(days=1), time(7, 59))
                     delay = (next_run - now).total_seconds()
 
                     hours, remainder = divmod(delay, 3600)
