@@ -42,7 +42,7 @@ async def main():
                     minutes, seconds = divmod(remainder, 60)
 
                     await app.send_message(config.MY_ID,
-                                           f"!Сегодня никто не родился, поздравление будет через: {int(hours)} часов, {int(minutes)} минут, {int(seconds)} секунд.")
+                                           f"!Сегодня никто не родился (либо это перезапуск), поздравление будет через: {int(hours)} часов, {int(minutes)} минут, {int(seconds)} секунд.")
                     await asyncio.sleep(delay)
 
                 delay = 70
