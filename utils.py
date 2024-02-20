@@ -63,6 +63,13 @@ async def random_pic():
         logging.error(f"Error selecting random picture: {e}")
         return None
 
+#def get_contrast_color(background_color):
+#    brightness = sum(background_color) / 3
+#    return 1 if brightness < 128 else 2
+#
+#def get_contrast_logo(color_index):
+#    return config.LOGO_YELLOW if color_index == 1 else config.LOGO_RED
+
 async def delete_message(chat_id, group_id, app):
     try:
         with open('message_ids.txt', 'r') as file:
@@ -70,7 +77,7 @@ async def delete_message(chat_id, group_id, app):
     except FileNotFoundError:
         saved_message_ids = []
 
-    messages_to_delete = saved_message_ids[-2:]
+    messages_to_delete = saved_message_ids[-4:]
     for msg_id in messages_to_delete:
         try:
             await app.delete_messages(group_id, msg_id)
@@ -79,16 +86,19 @@ async def delete_message(chat_id, group_id, app):
 
     await app.send_message(chat_id, "Картинка удалена")
 
-async def make_image():
-    im = Image.open(await random_pic())
+async def make_image(people_to_congratulate):
+    pic_path = await random_pic()
+    pic_index = config.PIC_PLACE.index(pic_path)
 
     # Выбор цвета текста и логотипа в зависимости от выбранной картинки
-    if 1 <= random.randint(1, 12) <= 6:
+    if pic_index < 12:
         text_color = "#E8CB52"
-        logo_path = config.LOGO_WHITE
+        logo_path = config.LOGO_YELLOW
     else:
         text_color = "#A60B38"
-        logo_path = config.LOGO_BLACK
+        logo_path = config.LOGO_RED
+
+    im = Image.open(pic_path)
 
     # Вотермарка
     watermark = Image.open(logo_path).convert("RGBA")
@@ -99,30 +109,26 @@ async def make_image():
     font1 = ImageFont.truetype("georgia.ttf", size=80)
     font2 = ImageFont.truetype("cour.ttf", size=60)
     font3 = ImageFont.truetype("georgia.ttf", size=65)
+    bold_font2 = ImageFont.truetype("courbd.ttf", size=60)
     draw_text = ImageDraw.Draw(im)
 
-    # Добавление черного обрамления для лучшей видимости текста
+    # Добавление черного обрамления с небольшой прозрачностью для красивого эффекта
     x = 360
     y = 120
-    for i in range(-1, 2):
-        for j in range(-1, 2):
-            draw_text.text((x + i, y + j), text.pordr_verh, font=font1, fill="#000000")
+    for i in range(-2, 3):
+        for j in range(-2, 3):
+            draw_text.text((x + i, y + j), text.pordr_verh, font=font1, fill="#000000", alpha=150)
 
     draw_text.text((x, y), text.pordr_verh, font=font1, fill=text_color)
 
-    current_date = datetime.now().strftime("%d.%m")
-    current_date = "'" + current_date + "'"
-
-    bd_today = db_functions.name_and_group_get(current_date)
-
-    q = len(bd_today)
+    q = len(people_to_congratulate)
     if q == 1:
-        if bd_today[0][3] == 1:
+        if people_to_congratulate[0][3] == 1:
             case = 1
         else:
             case = 3
     else:
-        ch = sum(1 for entry in bd_today if entry[3] == 1)
+        ch = sum(1 for entry in people_to_congratulate if entry[3] == 1)
         if ch == q:
             case = 2
         elif ch == 0:
@@ -132,9 +138,9 @@ async def make_image():
 
     pozdr_niz = await random_congratulation(case)
 
-    x = 150
-    y = 265
-    for entry in bd_today:
+    x = 140
+    y = 270
+    for entry in people_to_congratulate:
         y += 50
         max_line_length = 25
         name_parts = entry[0].strip().split()[:2]
@@ -147,21 +153,21 @@ async def make_image():
         wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
         new_x = x - 20
         for line in wrapped_text:
-            for i in range(-1, 2):
-                for j in range(-1, 2):
-                    draw_text.text((new_x + i, y + j), line, font=font2, fill="#000000")
-            draw_text.text((new_x, y), line, font=font2, fill=text_color)
+            for i in range(-2, 3):
+                for j in range(-2, 3):
+                    draw_text.text((new_x + i, y + j), line, font=font2, fill="#000000", alpha=150)  # Добавляем прозрачность
+            draw_text.text((new_x, y), line, font=bold_font2 if entry[3] == 1 else font2, fill=text_color)
             y += 50
 
     y += 20
-    max_line_length = 30
+    max_line_length = 27
     wrapped_text = textwrap.wrap(pozdr_niz, width=max_line_length)
 
     new_x = 100 - 30
     for line in wrapped_text:
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                draw_text.text((new_x + i, y + j), line, font=font3, fill="#000000")
+        for i in range(-2, 3):
+            for j in range(-2, 3):
+                draw_text.text((new_x + i, y + j), line, font=font3, fill="#000000", alpha=150)  # Добавляем прозрачность
         draw_text.text((new_x, y), line, font=font3, fill=text_color)
         y += 50
 

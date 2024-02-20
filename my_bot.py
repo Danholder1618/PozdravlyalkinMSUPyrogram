@@ -5,8 +5,8 @@ import text
 from datetime import datetime, time, timedelta
 
 # Отправка фотографии каждый день в 8 часов
-async def birthday(app, group_id, chat_id):
-    await utils.make_image()
+async def birthday(app, group_id, chat_id, people_to_congratulate, iteration):
+    await utils.make_image(people_to_congratulate)
     photo_path = config.BG_PATH
 
     # Получение информации о текущем пользователе (боте)
@@ -19,7 +19,7 @@ async def birthday(app, group_id, chat_id):
         file_size_limit_mib = 2000
 
     # Удаление прошлой фотографии
-    await utils.delete_message(chat_id, group_id, app)
+    if (iteration == 0): await utils.delete_message(chat_id, group_id, app)
 
     # Отправка новой фотографии
     message = await app.send_photo(group_id, photo_path, text.podpis)
