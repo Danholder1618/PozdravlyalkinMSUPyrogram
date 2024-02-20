@@ -10,8 +10,8 @@ from my_bot import birthday
 
 api_id = config.APP_API_ID
 api_hash = config.APP_API_HASH
-bot_token = config.BOT_TOKEN
-group_id = config.MSU_ID
+bot_token = config.BOT_TEST_TOKEN
+group_id = config.TEST_CHANEL
 chat_id = config.MY_ID
 
 async def main():
@@ -32,8 +32,8 @@ async def main():
         if bd_today and not last_congratulation_sent:
             await app.send_message(chat_id, "Сегодня кто-то родился, поздравление отправляется")
 
-            # Определяем, сколько картинок нужно создать
-            num_images = -(-len(bd_today) // 3)  # Сколько картинок нужно создать, округление вверх
+            # Кол-во разбиейний людей
+            num_images = -(-len(bd_today) // 3)
 
             # Создаем и отправляем каждую картинку
             for i in range(num_images):
@@ -54,7 +54,7 @@ async def main():
         await send_congratulation()
 
     # Запланируем отправку поздравления каждый день в 8 утра
-    schedule.every().day.at("08:00").do(send_congratulation)
+    schedule.every().day.at("00:10").do(send_congratulation)
 
     while True:
         schedule.run_pending()

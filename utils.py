@@ -138,7 +138,7 @@ async def make_image(people_to_congratulate):
 
     pozdr_niz = await random_congratulation(case)
 
-    x = 140
+    x = 110
     y = 270
     for entry in people_to_congratulate:
         y += 50
@@ -151,24 +151,31 @@ async def make_image(people_to_congratulate):
             text_to_wrap = f'! {fi.strip()} !'
 
         wrapped_text = textwrap.wrap(text_to_wrap, width=max_line_length)
-        new_x = x - 20
+        first_line_indent = 30
+        new_x = x
         for line in wrapped_text:
             for i in range(-2, 3):
                 for j in range(-2, 3):
-                    draw_text.text((new_x + i, y + j), line, font=font2, fill="#000000", alpha=150)  # Добавляем прозрачность
+                    draw_text.text((new_x + i, y + j), line, font=font2, fill="#000000",
+                                   alpha=150)  # Добавляем прозрачность
             draw_text.text((new_x, y), line, font=bold_font2 if entry[3] == 1 else font2, fill=text_color)
             y += 50
+            new_x += first_line_indent
+            first_line_indent = 0
 
-    y += 20
+    y += 30
     max_line_length = 27
     wrapped_text = textwrap.wrap(pozdr_niz, width=max_line_length)
 
-    new_x = 100 - 30
+    first_line_indent = 30
+    new_x = 70
     for line in wrapped_text:
         for i in range(-2, 3):
             for j in range(-2, 3):
-                draw_text.text((new_x + i, y + j), line, font=font3, fill="#000000", alpha=150)  # Добавляем прозрачность
+                draw_text.text((new_x + i, y + j), line, font=font3, fill="#000000", alpha=150)
         draw_text.text((new_x, y), line, font=font3, fill=text_color)
         y += 50
+        new_x -= first_line_indent
+        first_line_indent = 0
 
     im.save('temp.png', format="PNG")
