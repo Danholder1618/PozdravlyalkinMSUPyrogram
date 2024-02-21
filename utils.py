@@ -100,7 +100,7 @@ async def make_image(people_to_congratulate):
 
     im = Image.open(pic_path)
 
-    dark_overlay = Image.new('RGBA', im.size, color=(0, 0, 0, 50))
+    dark_overlay = Image.new('RGBA', im.size, color=(0, 0, 0, 20))
     im = Image.alpha_composite(im.convert('RGBA'), dark_overlay)
 
     # Вотермарка
