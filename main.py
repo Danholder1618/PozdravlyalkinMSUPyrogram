@@ -8,8 +8,8 @@ from my_bot import birthday
 
 api_id = config.APP_API_ID
 api_hash = config.APP_API_HASH
-bot_token = config.BOT_TEST_TOKEN
-group_id = config.TEST_CHANEL
+bot_token = config.BOT_TOKEN
+group_id = config.MSU_ID
 chat_id = config.MY_ID
 
 async def send_congratulation(app):
