@@ -1,5 +1,4 @@
 from pyrogram import filters
-from pyrogram.types import Message
 from main import app
 
 import text

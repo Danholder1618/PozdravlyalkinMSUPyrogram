@@ -122,7 +122,7 @@ def name_and_group_get(current_date):
 
 	try:
 		#sql.execute('SELECT * FROM birthdays WHERE SUBSTR(date_, 1,2) = "17" AND SUBSTR(date_, 4,2) = "10"')
-		sql.execute(f"SELECT * FROM birthdays WHERE SUBSTR(date_, 1,5) = {str(current_date)}")
+		sql.execute(f"SELECT * FROM birthdays WHERE SUBSTR(date_, 1,5) = '{str(current_date)}'")
 		names = sql.fetchall()
 		if names is None:
 			return names

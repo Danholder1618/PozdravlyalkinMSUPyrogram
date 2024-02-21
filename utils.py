@@ -84,7 +84,7 @@ async def delete_message(chat_id, group_id, app):
         except Exception as e:
             logging.error(f"Error deleting message {msg_id}: {e}")
 
-    await app.send_message(chat_id, "Картинка удалена")
+    # await app.send_message(chat_id, "Картинка удалена")
 
 async def make_image(people_to_congratulate):
     pic_path = await random_pic()
@@ -156,8 +156,7 @@ async def make_image(people_to_congratulate):
         for line in wrapped_text:
             for i in range(-2, 3):
                 for j in range(-2, 3):
-                    draw_text.text((new_x + i, y + j), line, font=font2, fill="#000000",
-                                   alpha=150)  # Добавляем прозрачность
+                    draw_text.text((new_x + i, y + j), line, font=font2, fill="#000000", alpha=150)
             draw_text.text((new_x, y), line, font=bold_font2 if entry[3] == 1 else font2, fill=text_color)
             y += 50
             new_x += first_line_indent
@@ -169,6 +168,7 @@ async def make_image(people_to_congratulate):
 
     first_line_indent = 30
     new_x = 70
+    y = 750
     for line in wrapped_text:
         for i in range(-2, 3):
             for j in range(-2, 3):
