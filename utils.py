@@ -88,10 +88,10 @@ async def delete_message(chat_id, group_id, app):
 
 async def make_image(people_to_congratulate):
     pic_path = await random_pic()
-    pic_index = config.PIC_PLACE.index(pic_path)
+    pic_index = config.PIC_PLACE.index(pic_path) + 1
 
     # Выбор цвета текста и логотипа в зависимости от выбранной картинки
-    if pic_index < 12:
+    if pic_index < 13:
         text_color = "#E8CB52"
         logo_path = config.LOGO_YELLOW
     else:
@@ -99,6 +99,9 @@ async def make_image(people_to_congratulate):
         logo_path = config.LOGO_RED
 
     im = Image.open(pic_path)
+
+    dark_overlay = Image.new('RGBA', im.size, color=(0, 0, 0, 50))
+    im = Image.alpha_composite(im.convert('RGBA'), dark_overlay)
 
     # Вотермарка
     watermark = Image.open(logo_path).convert("RGBA")
